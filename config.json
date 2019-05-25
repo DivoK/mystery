@@ -1,5 +1,6 @@
 {
-    "top_pypi_packages_link": "https://hugovk.github.io/top-pypi-packages/top-pypi-packages-30-days.json",
+    "top_pypi_packages_link": "https://hugovk.github.io/top-pypi-packages/top-pypi-packages-30-days.min.json",
+    "top_pypi_packages_offline_backup": "top-pypi-packages-30-days.min.json",
     "top_x_packages": 100,
-    "lockfile_name": "._pkg_dep.lock"
+    "lockfile_name": ".mystery_pkg_dep.lock"
 }
