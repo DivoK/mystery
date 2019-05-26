@@ -65,6 +65,7 @@ def write_init_py(package_name: str) -> None:
     :type chosen_package: str
     :rtype: None
     """
+    package_name = package_name.replace('-', '_')  # Transform to eligible package name.
     init_py_path = pathlib.Path('mystery')
     init_py_path.mkdir(exist_ok=True)
     init_py_path = init_py_path / '__init__.py'
@@ -73,7 +74,11 @@ def write_init_py(package_name: str) -> None:
 def _import_guard():
     # I'd like to get rid of all the imports inside the function's scope.
     # Less headache during cleanup.
-    import {package_name}
+    try:
+        import {package_name}
+    except ImportError as error:
+        print('Internal error:', error)
+        print("The mystery module wasn't playing nice. Sorry!")
     import sys
     sys.modules['mystery'] = {package_name}
 _import_guard()
@@ -90,4 +95,5 @@ setuptools.setup(
     description='It is a riddle, wrapped in a mystery, inside an enigma.',
     packages=setuptools.find_packages(),
     install_requires=[CHOSEN_PACKAGE],
+    include_package_data=True,
 )
