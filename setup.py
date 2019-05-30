@@ -34,7 +34,7 @@ def get_package_list() -> typing.List[str]:
 
 def choose_mystery_package() -> str:
     """
-    Choose the underlying mysterious package.
+    Choose the underlying mysterious package and handle the lockfile state.
 
     :return: mystery package name.
     :rtype: str
@@ -71,14 +71,18 @@ def write_init_py(package_name: str) -> None:
     init_py_path = init_py_path / '__init__.py'
     init_py_path.write_text(
         f'''
+# I'd like not to affect the current imported modules (besides 'mystery' of course).
+# Using a function's scope to contain the imports makes it less of a headache during cleanup.
 def _import_guard():
-    # I'd like to get rid of all the imports inside the function's scope.
-    # Less headache during cleanup.
+    """
+    Attempt to import the chosen package and add it to sys.modules.
+    """
     try:
         import {package_name}
     except ImportError as error:
         print('Internal error:', error)
         print("The mystery module wasn't playing nice. Sorry!")
+        return
     import sys
     sys.modules['mystery'] = {package_name}
 _import_guard()
@@ -87,8 +91,20 @@ del _import_guard
     )
 
 
+def get_long_description_data() -> typing.Tuple[str, str]:
+    """
+    Get data regarding the long description of the package.
+
+    :return: Tuple of README.md text and long_description type.
+    :rtype: typing.Tuple[str, str]
+    """
+    with open('README.md', 'r') as readme:
+        return (readme.read(), 'text/markdown')
+
+
 CHOSEN_PACKAGE = choose_mystery_package()
 write_init_py(CHOSEN_PACKAGE)
+LONG_DESCRIPTION, LONG_DESCRIPTION_CONTENT_TYPE = get_long_description_data()
 
 setuptools.setup(
     name='mystery',
@@ -96,4 +112,6 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=[CHOSEN_PACKAGE],
     include_package_data=True,
+    long_description=LONG_DESCRIPTION,
+    long_description_content_type=LONG_DESCRIPTION_CONTENT_TYPE,
 )
