@@ -12,7 +12,7 @@ CONFIG_PATH = pathlib.Path('config.json')
 CONFIG = json.load(CONFIG_PATH.open('r'))
 
 
-def get_package_list() -> typing.List[str]:
+def _get_package_list() -> typing.List[str]:
     """
     Get a list of possible packages.
 
@@ -32,9 +32,9 @@ def get_package_list() -> typing.List[str]:
     return json.loads(possible_packages_raw)['rows'][: CONFIG['top_x_packages']]
 
 
-def choose_mystery_package() -> str:
+def _choose_mystery_package() -> str:
     """
-    Choose the underlying mysterious package and handle the lockfile state.
+    Choose the underlying mysterious package and handle the lockfile's state.
 
     :return: mystery package name.
     :rtype: str
@@ -49,7 +49,7 @@ def choose_mystery_package() -> str:
         dep_lock_path.unlink()
     else:
         # Choose a package and create the lockfile.
-        possible_packages = get_package_list()
+        possible_packages = _get_package_list()
         chosen_package = random.choice(
             [package['project'] for package in possible_packages]
         )
@@ -57,7 +57,24 @@ def choose_mystery_package() -> str:
     return chosen_package
 
 
-def write_init_py(package_name: str) -> None:
+def _fix_package_name(package_name: str) -> str:
+    """
+    Fix the package name so it could be placed in the __init__.py file.
+
+    :param package_name: mystery package name.
+    :type package_name: str
+    :return: fixed mystery package name.
+    :rtype: str
+    """
+    # Transform to eligible package name.
+    fixed_package_name = package_name.replace('-', '_')
+    # special case for the 'backports' modules.
+    if fixed_package_name.startswith('backports_'):
+        fixed_package_name.replace('_', '.', count=1)
+    return fixed_package_name
+
+
+def _write_init_py(package_name: str) -> None:
     """
     Dynamically write the __init__.py for the package using the chosen package.
 
@@ -65,7 +82,7 @@ def write_init_py(package_name: str) -> None:
     :type chosen_package: str
     :rtype: None
     """
-    package_name = package_name.replace('-', '_')  # Transform to eligible package name.
+    package_name = _fix_package_name(package_name)
     init_py_path = pathlib.Path('mystery')
     init_py_path.mkdir(exist_ok=True)
     init_py_path = init_py_path / '__init__.py'
@@ -91,20 +108,20 @@ del _import_guard
     )
 
 
-def get_long_description_data() -> typing.Tuple[str, str]:
+def _get_long_description_data() -> typing.Tuple[str, str]:
     """
     Get data regarding the long description of the package.
 
-    :return: Tuple of README.md text and long_description type.
+    :return: tuple of the README.md text and the long_description type.
     :rtype: typing.Tuple[str, str]
     """
     with open('README.md', 'r') as readme:
         return (readme.read(), 'text/markdown')
 
 
-CHOSEN_PACKAGE = choose_mystery_package()
-write_init_py(CHOSEN_PACKAGE)
-LONG_DESCRIPTION, LONG_DESCRIPTION_CONTENT_TYPE = get_long_description_data()
+CHOSEN_PACKAGE = _choose_mystery_package()
+_write_init_py(CHOSEN_PACKAGE)
+LONG_DESCRIPTION, LONG_DESCRIPTION_CONTENT_TYPE = _get_long_description_data()
 
 setuptools.setup(
     name='mystery',
