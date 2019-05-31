@@ -1,6 +1,11 @@
 # Mystery
 
-> It is a riddle, wrapped in a mystery, inside an enigma.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![PyPI pyversions](https://img.shields.io/pypi/pyversions/mystery.svg)](https://pypi.python.org/pypi/mystery/)
+[![PyPI version fury.io](https://badge.fury.io/py/mystery.svg)](https://pypi.python.org/pypi/mystery/)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
+
+> "It is a riddle, wrapped in a mystery, inside an enigma."
 >
 > -- _Sir Winston Churchill_
 
