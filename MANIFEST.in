@@ -1,1 +1,8 @@
+# Include the README
+include *.md
+
+# Include the LICENSE
+include *.txt
+
+# Include the config and backup files
 include *.json

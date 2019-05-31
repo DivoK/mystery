@@ -42,4 +42,4 @@ After choosing a package, mystery's `setup.py` will create a **lockfile** in the
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE.txt)
