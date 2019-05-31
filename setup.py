@@ -1,3 +1,8 @@
+"""
+Core business logic for `mystery`.
+This code will run when the package is being built and installed.
+"""
+
 import json
 import pathlib
 import random
@@ -21,9 +26,7 @@ def _get_package_list() -> typing.List[str]:
     """
     try:
         # Get the top PyPI packages and use one of them.
-        response = urllib.request.urlopen(
-            CONFIG['top_pypi_packages_link']
-        )  # TODO: give credit. thank you!
+        response = urllib.request.urlopen(CONFIG['top_pypi_packages_link'])
         possible_packages_raw = response.read()
     except urllib.request.URLError:
         # Use the offline backup file.
@@ -125,10 +128,25 @@ LONG_DESCRIPTION, LONG_DESCRIPTION_CONTENT_TYPE = _get_long_description_data()
 
 setuptools.setup(
     name='mystery',
+    version='1.0.0',
     description='It is a riddle, wrapped in a mystery, inside an enigma.',
+    url='https://github.com/DivoK/mystery',
+    author='Divo Kaplan',
+    author_email='divokaplan@gmail.com',
     packages=setuptools.find_packages(),
     install_requires=[CHOSEN_PACKAGE],
+    python_requires='>=3.6',
     include_package_data=True,
     long_description=LONG_DESCRIPTION,
     long_description_content_type=LONG_DESCRIPTION_CONTENT_TYPE,
+    classifiers=[
+        'Development Status :: 5 - Production/Stable',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Intended Audience :: Other Audience',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+    ],
 )
