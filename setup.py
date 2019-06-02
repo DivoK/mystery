@@ -93,6 +93,7 @@ def _write_init_py(package_name: str) -> None:
         f'''
 # I'd like not to affect the current imported modules (besides 'mystery' of course).
 # Using a function's scope to contain the imports makes it less of a headache during cleanup.
+import sys
 def _import_guard():
     """
     Attempt to import the chosen package and add it to sys.modules.
@@ -103,10 +104,11 @@ def _import_guard():
         print('Internal error:', error)
         print("The mystery module wasn't playing nice. Sorry!")
         return
-    import sys
     sys.modules['mystery'] = {package_name}
 _import_guard()
 del _import_guard
+sys.modules['mystery'].__mystery_init_py__ = __file__
+del sys
 '''
     )
 
