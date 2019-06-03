@@ -1,6 +1,7 @@
 # Mystery
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Build Status](https://travis-ci.org/DivoK/mystery.svg?branch=master)](https://travis-ci.org/DivoK/mystery)
 [![PyPI pyversions](https://img.shields.io/pypi/pyversions/mystery.svg)](https://pypi.python.org/pypi/mystery/)
 [![PyPI version fury.io](https://badge.fury.io/py/mystery.svg)](https://pypi.python.org/pypi/mystery/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
