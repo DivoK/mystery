@@ -11,10 +11,35 @@ import urllib.request
 import typing
 
 import setuptools
+from setuptools.command.sdist import sdist
 
 # Load the configuration file.
 CONFIG_PATH = pathlib.Path('config.json')
 CONFIG = json.load(CONFIG_PATH.open('r'))
+
+
+def _get_lockfile_path() -> pathlib.Path:
+    """
+    Assemble the lockfile's path.
+
+    :return: lockfile path.
+    :rtype: pathlib.Path
+    """
+    return pathlib.Path(tempfile.gettempdir()).joinpath(CONFIG['lockfile_name'])
+
+
+class SDistCommand(sdist):
+    """
+    Will be registered as a replacement for pip's 'sdist' command.
+    """
+
+    def run(self):
+        dep_lock_path = _get_lockfile_path()
+        try:
+            dep_lock_path.unlink()
+        except FileNotFoundError:
+            pass
+        super().run()
 
 
 def _get_package_list() -> typing.List[str]:
@@ -43,9 +68,7 @@ def _choose_mystery_package() -> str:
     :rtype: str
     """
     # To keep the chosen dependency consistent in between setup.py runs, 'mystery' uses a temporary lockfile.
-    dep_lock_path = pathlib.Path(tempfile.gettempdir()).joinpath(
-        CONFIG['lockfile_name']
-    )
+    dep_lock_path = _get_lockfile_path()
     if dep_lock_path.exists():
         # Use the locked package and unlink the lockfile.
         chosen_package = dep_lock_path.read_text().strip()
@@ -71,7 +94,7 @@ def _fix_package_name(package_name: str) -> str:
     """
     # Transform to eligible package name.
     fixed_package_name = package_name.replace('-', '_')
-    # special case for the 'backports' modules.
+    # Special case for the 'backports' modules.
     if fixed_package_name.startswith('backports_'):
         fixed_package_name.replace('_', '.', count=1)
     return fixed_package_name
@@ -108,6 +131,7 @@ def _import_guard():
 _import_guard()
 del _import_guard
 sys.modules['mystery'].__mystery_init_py__ = __file__
+sys.modules['mystery'].__mystery_package_name__ = '{package_name}'
 del sys
 '''
     )
@@ -128,6 +152,7 @@ CHOSEN_PACKAGE = _choose_mystery_package()
 _write_init_py(CHOSEN_PACKAGE)
 LONG_DESCRIPTION, LONG_DESCRIPTION_CONTENT_TYPE = _get_long_description_data()
 
+
 setuptools.setup(
     name='mystery',
     version='1.0.0',
@@ -137,6 +162,7 @@ setuptools.setup(
     author_email='divokaplan@gmail.com',
     packages=setuptools.find_packages(),
     install_requires=[CHOSEN_PACKAGE],
+    cmdclass={'sdist': SDistCommand},
     python_requires='>=3.6',
     include_package_data=True,
     long_description=LONG_DESCRIPTION,
