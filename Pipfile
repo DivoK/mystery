@@ -8,6 +8,10 @@ flake8 = "*"
 pylint = "*"
 black = "*"
 twine = "*"
+ipython = "*"
+findimports = "*"
+pytest = "*"
+tox = "*"
 
 [packages]
 setuptools = "*"
