@@ -155,7 +155,7 @@ LONG_DESCRIPTION, LONG_DESCRIPTION_CONTENT_TYPE = _get_long_description_data()
 
 setuptools.setup(
     name='mystery',
-    version='1.0.0',
+    version='1.0.1',
     description='It is a riddle, wrapped in a mystery, inside an enigma.',
     url='https://github.com/DivoK/mystery',
     author='Divo Kaplan',
@@ -167,6 +167,7 @@ setuptools.setup(
     include_package_data=True,
     long_description=LONG_DESCRIPTION,
     long_description_content_type=LONG_DESCRIPTION_CONTENT_TYPE,
+    keywords='mystery setuptools fun python-packages random',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'License :: OSI Approved :: MIT License',
