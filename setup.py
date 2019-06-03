@@ -125,7 +125,7 @@ def _import_guard():
         import {package_name}
     except ImportError as error:
         print('Internal error:', error)
-        print("The mystery module wasn't playing nice. Sorry!")
+        print("The mystery package wasn't playing nice. Sorry!")
         return
     sys.modules['mystery'] = {package_name}
 _import_guard()

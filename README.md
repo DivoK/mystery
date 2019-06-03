@@ -34,6 +34,10 @@ import mystery  # Who knows what's inside?
 # `mystery` is now some random package!
 
 mystery.__name__  # Quick cheat if you really are curious ;)
+
+# Here for testing purposes only but go ahead:
+mystery.__mystery_init_py__  # String path pointing to mystery's __init__.py file.
+mystery.__mystery_package_name__  # The mystery package's supposed name.
 ```
 
 ## How does it work?
@@ -45,6 +49,17 @@ What happens behind the scenes is that a `__init__.py` file is being _dynamicall
 After choosing a package, mystery's `setup.py` will create a **lockfile** in the temporary directory that will store the chosen package's name. The reason for that is that pip will actually run `setup.py` _twice_: first when building the package (`build_py` command) and again when actually installing the package (`install` command). The lockfile will hence be used after it's creation (first run of `setup.py`) to get the chosen package's name out of it (so the `install_requires` parameter in the two calls to `setuptools.setup()` will be in sync) and will then be deleted.
 
 > **Note** that using a lockfile means that if for some reason the lockfile's state gets out of sync (perhaps the setup process is stopped right after the build phase created the lockfile but before the installation phase deleted it) the next attempts at installing mystery will also **fail**. You can fix that by **manually deleting the lockfile** from your filesystem (it's location is stored in [this configuration file](config.json)).
+
+## I ran `import mystery` but I'm getting an error. Why?
+
+If your error is in the form of:
+
+> Internal error: ...
+> The mystery package wasn't playing nice. Sorry!
+
+That (hopefully) means that this package's PyPI name does not coorelate to their name under `setuptools.setup()`, so when mystery tries to import that same name (because again, it's done dynamically using the name registered in PyPI) it simply can't find a matching package and that lovely error message will pop up.
+
+Some famous packages who won't work for this reason are *scikit_learn*, _pyyaml_ and... A bunch of Google's stuff. Just reinstall mystery and have fun with a different package!
 
 ## License
 
