@@ -151,7 +151,7 @@ LONG_DESCRIPTION, LONG_DESCRIPTION_CONTENT_TYPE = _get_long_description_data()
 
 setuptools.setup(
     name='mystery',
-    version='1.0.1',
+    version='1.0.2',
     description='It is a riddle, wrapped in a mystery, inside an enigma.',
     url='https://github.com/DivoK/mystery',
     author='Divo Kaplan',
