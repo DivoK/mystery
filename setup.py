@@ -114,25 +114,21 @@ def _write_init_py(package_name: str) -> None:
     init_py_path = init_py_path / '__init__.py'
     init_py_path.write_text(
         f'''
-# I'd like not to affect the current imported modules (besides 'mystery' of course).
-# Using a function's scope to contain the imports makes it less of a headache during cleanup.
+# Here we're trying to import the mystery package (it's "{package_name}" this time).
+# If it exists, overwrite 'mystery' in 'sys.modules'. Else, print there was an error.
 import sys
-def _import_guard():
-    """
-    Attempt to import the chosen package and add it to sys.modules.
-    """
-    try:
-        import {package_name}
-    except ImportError as error:
-        print('Internal error:', error)
-        print("The mystery package wasn't playing nice. Sorry!")
-        return
+try:
+    import {package_name}
+except ImportError as error:
+    print('Internal error:', error)
+    print("The mystery package wasn't playing nice. Sorry!")
+    print('Hint: you can always try to reinstall mystery and get a different package!')
+    sorry = 'try reinstalling mystery and get a different package!'
+else:
     sys.modules['mystery'] = {package_name}
-_import_guard()
-del _import_guard
 sys.modules['mystery'].__mystery_init_py__ = __file__
 sys.modules['mystery'].__mystery_package_name__ = '{package_name}'
-del sys
+del sys  # We care about this only when mystery fails (and even that's inconsequential).
 '''
     )
 
