@@ -96,7 +96,7 @@ def _fix_package_name(package_name: str) -> str:
     fixed_package_name = package_name.replace('-', '_')
     # Special case for the 'backports' modules.
     if fixed_package_name.startswith('backports_'):
-        fixed_package_name.replace('_', '.', count=1)
+        fixed_package_name.replace('_', '.', 1)
     return fixed_package_name
 
 
