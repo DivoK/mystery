@@ -8,6 +8,7 @@ import findimports
 
 import mystery
 
+# Imports that appear in mystery's __init__.py that are not the mystery package import.
 ALLOWED_IMPORTS = ['sys']
 
 
@@ -28,17 +29,14 @@ def test_mystery_package():
     package_imports: typing.List[findimports.ImportInfo] = findimports.find_imports(
         mystery.__mystery_init_py__
     )
-    print(f'mystery_file: {mystery.__file__}')
-    print(f'mystery_name: {mystery.__name__}')
-    print(f'mystery_package_name: {mystery.__mystery_package_name__}')
     for package_import in package_imports:
         if package_import.name in ALLOWED_IMPORTS:
             continue
-        print(f'package_import_name: {package_import.name}')
         try:
-            _ = importlib.import_module(package_import.name)
+            importlib.import_module(package_import.name)
         except ModuleNotFoundError:
-            print('MODULE_NOT_FOUND!!')
+            # Package listed (PyPI) name is different than it's actual package name (the one you import).
             assert package_import.name == mystery.__mystery_package_name__
         else:
+            # No exception - package is importable and mystery should have worked.
             assert package_import.name == mystery.__name__
