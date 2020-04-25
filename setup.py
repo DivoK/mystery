@@ -32,7 +32,6 @@ class SDistCommand(sdist):
     """
     Will be registered as a replacement for pip's 'sdist' command.
     """
-
     def run(self):
         dep_lock_path = _get_lockfile_path()
         try:
